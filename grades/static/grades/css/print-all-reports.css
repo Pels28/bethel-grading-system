@@ -1,0 +1,243 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #007bff;
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #0056b3;
+}
+
+/* Form styling */
+form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+label {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Print Reports Container */
+.print-reports-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Report Page */
+.report-page {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.report-page h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #007bff;
+    text-align: center;
+}
+
+.report-page p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Print Button */
+.print-btn {
+    display: block;
+    margin: 20px auto;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.print-btn:hover {
+    background-color: #218838;
+}
+
+/* No Results Display */
+.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 18px;
+    color: #666;
+}
+
+/* Print-specific styles */
+@media print {
+    body {
+        background-color: #fff;
+        color: #000;
+    }
+
+    .nav-links, .print-btn {
+        display: none; /* Hide navigation and print button when printing */
+    }
+
+    .print-reports-container {
+        max-width: 100%;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .report-page {
+        page-break-inside: avoid; /* Prevent splitting a report across pages */
+        margin-bottom: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f1f1f1;
+        color: #000;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-link {
+        margin-right: 0;
+    }
+
+    form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .print-reports-container {
+        padding: 15px;
+    }
+
+    .report-page {
+        padding: 15px;
+    }
+
+    .report-page h2 {
+        font-size: 20px;
+    }
+
+    .report-page p {
+        font-size: 14px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .report-page h2 {
+        font-size: 18px;
+    }
+
+    .report-page p {
+        font-size: 12px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+}

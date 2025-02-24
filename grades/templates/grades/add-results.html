@@ -1,0 +1,183 @@
+{% extends "grades/base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/add-results.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+
+<nav class="nav-links">
+  <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+  <a href="{% url 'results' %}" class="nav-link">📚 Results</a>
+  <a href="{% url 'class-results' class_name.slug %}" class="nav-link">Class Results</a>
+</nav>
+
+<div class="container">
+  <h2>Submit Student Grades for {{ class_name.name }}</h2>
+
+  <!-- Horizontal Layout -->
+  <div class="horizontal-layout">
+    <!-- Student List -->
+    <div class="student-list">
+      <h3>Students</h3>
+      <ul>
+        {% for student in students %}
+          <li>
+            <a href="#" class="student-link" data-student-id="{{ student.id }}">
+              {{ student.first_name }} {{ student.last_name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Subject List (Initially Hidden) -->
+    <div class="subject-list" id="subjectList" style="display: none;">
+      <h3>Subjects</h3>
+      <ul id="subjectListContent"></ul>
+    </div>
+
+    <!-- Grade Form (Initially Hidden) -->
+    <div class="grade-form" id="gradeForm" style="display: none;">
+      <h3>Enter Grades</h3>
+      <form method="post" id="gradeFormContent">
+        {% csrf_token %}
+        <input type="hidden" name="student_id" id="studentId">
+        <input type="hidden" name="subject_id" id="subjectId">
+
+        <!-- Academic Year Dropdown -->
+        <div class="form-group">
+          <label for="academic-year">Academic Year:</label>
+          <select name="academic_year" id="academic-year" class="form-control" required>
+            <option value="" disabled selected>Select Academic Year</option>
+            <option value="22/23">22/23</option>
+            <option value="23/24">23/24</option>
+            <option value="24/25">24/25</option>
+          </select>
+        </div>
+
+        <!-- Semester Dropdown -->
+        <div class="form-group">
+          <label for="semester">Semester:</label>
+          <select name="semester" id="semester" class="form-control" required>
+            <option value="" disabled selected>Select a semester</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+          </select>
+        </div>
+
+        <!-- Class Score Input -->
+        <div class="form-group">
+          <label for="class_score">Class Score:</label>
+          <input type="number" name="class_score" id="class_score" class="form-control" min="0" max="100" required>
+        </div>
+
+        <!-- Exam Score Input -->
+        <div class="form-group">
+          <label for="exam_score">Exam Score:</label>
+          <input type="number" name="exam_score" id="exam_score" class="form-control" min="0" max="100" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% block js_files %}
+<script src="{% static "grades/js/add-results.js" %}"></script>
+{% endblock js_files %}
+
+{% endblock content %}
+
+
+
+{% comment %} {% extends "grades/base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/add-results.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+
+
+
+<nav class="nav-links">
+  <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+  <a href="{% url 'results' %}" class="nav-link">📚 Results</a>
+  <a href="{% url 'class-results' class_name.slug  %}" class="nav-link">Class Results</a>
+</nav>
+
+
+  <h2>Submit Student Grades for {{ class_name.name }}</h2>
+  <form method="post" data-class-slug="{{ class_name.slug }}">
+    {% csrf_token %}
+    
+    <!-- Student Name Dropdown -->
+    <div class="form-group">
+      <label for="student_name">Student Name:</label>
+      <select name="student_name" id="student_name" class="form-control" required>
+        <option value="" disabled selected>Select a student</option>
+        {% for student in students %}
+          <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Subject Dropdown -->
+    <div class="form-group">
+      <label for="subject">Subject:</label>
+      <select name="subject" id="subject" class="form-control" required>
+        <option value="" disabled selected>Select a subject</option>
+        {% for subject in subjects %}
+          <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Academic Dropdown -->
+    <div class="form-group">
+      <label for="academic-year">Academic Year:</label>
+      <select name="academic_year" id="academic-year" class="form-control" required>
+        <option value="" disabled selected>Select Academic Year</option>
+        <option value="22/23">22/23</option>
+        <option value="23/24">23/24</option>
+        <option value="24/25">24/25</option>
+      </select>
+    </div>
+
+    <!-- Semester Dropdown -->
+    <div class="form-group">
+      <label for="semester">Semester:</label>
+      <select name="semester" id="semester" class="form-control" required>
+        <option value="" disabled selected>Select a semester</option>
+        <option value="1">Semester 1</option>
+        <option value="2">Semester 2</option>
+        <option value="3">Semester 3</option>
+      </select>
+    </div>
+
+    <!-- Class Score Input -->
+    <div class="form-group">
+      <label for="class_score">Class Score:</label>
+      <input type="number" name="class_score" id="class_score" class="form-control" min="0" max="100" required>
+    </div>
+
+    <!-- Exam Score Input -->
+    <div class="form-group">
+      <label for="exam_score">Exam Score:</label>
+      <input type="number" name="exam_score" id="exam_score" class="form-control" min="0" max="100" required>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  {% block js_files %}
+  <script src="{% static "grades/add-results.js" %}"></script>
+  {% endblock js_files %}
+{% endblock content %} {% endcomment %}
