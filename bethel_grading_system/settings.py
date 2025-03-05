@@ -32,7 +32,7 @@ SECRET_KEY = getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv("IS_DEVELOPMENT", True)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://bethel-grading-system.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
