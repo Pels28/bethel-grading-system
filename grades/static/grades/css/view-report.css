@@ -1,0 +1,112 @@
+/* Centering the report container */
+.report-container {
+    max-width: 700px;
+    margin: 30px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* Semester Dropdown */
+.semester-form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.semester-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Student Info Section */
+.report-container div {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.report-container p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+thead {
+    background: #007bff;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Total Score & Position */
+.total-score, .position {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Print Button */
+.print-btn {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.print-btn:hover {
+    background: #218838;
+}
+
+
+.nav-links {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #007bff; /* Blue background */
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+    color: #fff; /* White text */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

@@ -1,0 +1,24 @@
+{% extends "grades/base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href=" {% static "grades/css/grades.css" %} ">
+{% endblock css_files %}
+
+{% block content %}
+
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+    <a href="{% url 'students' %}" class="nav-link"> Classes</a>
+</nav>
+
+<div class="container">
+    <div class="box">
+        <a href="{% url 'students-mid-term' class.slug %}">Mid Term Exams</a>
+    </div>
+    <div class="box">
+        <a href="{% url 'add-student' class.slug %}">Terminal Exams</a>
+    </div>
+</div>
+
+{% endblock content %}

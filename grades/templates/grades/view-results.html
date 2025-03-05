@@ -1,0 +1,70 @@
+{% extends "grades/base.html" %}
+{% load static %}
+{% load filters %}  <!-- Load the custom filter -->
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/view-results.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+    <a href="{% url 'results' %}" class="nav-link">Classes</a>
+    <a href="{% url 'results-exam-type' class_name.slug %}" class="nav-link">Exams Type</a>
+  
+</nav>
+
+<!-- Academic Year & Semester Selection Form -->
+<form method="get" action="{% url 'view-results' slug=class_name.slug %}" class="semester-form">
+    <label for="academic_year">Select Academic Year:</label>
+    <select name="academic_year" id="academic_year" onchange="this.form.submit()">
+    
+        <option value="22/23">22/23</option>
+        <option value="23/24">23/24</option>
+        <option value="24/25"selected>24/25</option>
+
+    </select>
+
+    <label for="semester">Select Semester:</label>
+    <select name="semester" id="semester" onchange="this.form.submit()">
+        <option value="1" {% if selected_semester == 1 %}selected{% endif %}>Semester 1</option>
+        <option value="2" {% if selected_semester == 2 %}selected{% endif %}>Semester 2</option>
+        <option value="3" {% if selected_semester == 3 %}selected{% endif %}>Semester 3</option>
+    </select>
+</form>
+
+<h2>Class Results for {{ class_name.name }} (Semester {{ selected_semester }}, {{ selected_academic_year }})</h2>
+
+{% if student_scores %}
+<table id="resultsTable">
+    <thead>
+        <tr>
+            <th>Position</th>
+            <th>Student Name</th>
+            <th>Total Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in student_scores %}
+        <tr onclick="redirectToReport('{{ class_name.slug }}', '{{ student.student_name_id }}')" style="cursor: pointer;">
+            <td>{{ student.position|ordinal }}</td>  <!-- Convert position to ordinal format -->
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>{{ student.total_score|floatformat:2 }}</td>
+         </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Print Button -->
+<button onclick="printResults()" class="print-btn">Print to PDF</button>
+
+{% else %}
+<p>No results available for this class.</p>
+{% endif %}
+
+{% endblock content %}
+
+{% block js_files %}
+<script src="{% static "grades/js/class_results.js" %}"></script>
+{% endblock js_files %}

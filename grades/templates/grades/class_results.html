@@ -1,0 +1,41 @@
+{% extends "grades/base.html" %}
+{% load static %}
+
+{% load filters %}  <!-- Load the custom filter -->
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/class-results.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+
+
+
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+    <a href="{% url 'results' %}" class="nav-link">📚 Results</a>
+  
+  </nav>
+
+
+<div class="container">
+    {% comment %} <div class="box" >
+        <a href="{% url "add-results" class_name.slug %}"><h2>Add Results</h2></a>
+    </div> {% endcomment %}
+    
+    <div class="box">
+        <a href="{% url "view-results" class_name.slug %}"><h2>View Results</h2></a>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+

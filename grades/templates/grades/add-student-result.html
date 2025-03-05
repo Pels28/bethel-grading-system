@@ -1,0 +1,108 @@
+{% extends "grades/base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/add-student-result.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+<div class="container">
+    <!-- Display success messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Enter Grades for {{ student.first_name }} {{ student.last_name }}</h2>
+
+    <!-- Add Subject Button at the top-right -->
+    <div style="text-align: right; margin-bottom: 20px;">
+        <button type="button" id="addSubjectButton" class="btn btn-secondary">Add Subject</button>
+    </div>
+
+    <form method="post" id="gradeForm">
+        {% csrf_token %}
+
+        <label>Semester:</label>
+        <select name="semester" id="semester" required>
+            <option value="">Select Semester</option>
+            <option value="1">1st Semester</option>
+            <option value="2">2nd Semester</option>
+        </select>
+
+        <label>Academic Year:</label>
+        <select name="academic_year" id="academic_year" required>
+            <option value="">Select Academic Year</option>
+            <option value="23/24" {% if default_academic_year == "23/24" %}selected{% endif %}>23/24</option>
+            <option value="24/25" {% if default_academic_year == "24/25" %}selected{% endif %}>24/25</option>
+            <option value="25/26" {% if default_academic_year == "25/26" %}selected{% endif %}>25/26</option>
+        </select>
+
+        <table id="gradesTable">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Class Score</th>
+                    <th>30% (Class Score)</th>
+                    <th>Exam Score</th>
+                    <th>70% (Exam Score)</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subjects %}
+                <tr data-subject-id="{{ subject.id }}">
+                    <td>{{ subject.subject_name }}</td>
+                    <td>
+                        <input type="number" name="class_score_{{ subject.id }}" class="class-score" min="0" max="100">
+                    </td>
+                    <td>
+                        <input type="number" class="exam-30" readonly>
+                    </td>
+                    <td>
+                        <input type="number" name="exam_score_{{ subject.id }}" class="exam-score" min="0" max="100">
+                    </td>
+                    <td>
+                        <input type="number" class="exam-70" readonly>
+                    </td>
+                    <td>
+                        <input type="number" class="total-score" readonly>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary">Submit Grades</button>
+    </form>
+</div>
+
+<!-- Modal for adding a new subject -->
+<div id="addSubjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Add New Subject</h3>
+        <form id="addSubjectForm">
+            <label for="subjectName">Subject Name:</label>
+            <input type="text" id="subjectName" name="subjectName" required>
+            <label for="teacherName">Teacher Name:</label>
+            <input type="text" id="teacherName" name="teacherName" required>
+            <button type="submit" class="btn btn-primary">Add Subject</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Pass the results dictionary from Django to JavaScript
+    const resultsDict = {{ results_dict|safe }};
+</script>
+{% endblock content %}
+
+{% block js_files %}
+<script src="{% static "grades/js/add-student-result.js" %}"></script>
+{% endblock js_files %}

@@ -1,0 +1,34 @@
+{% extends "grades/base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/students.css"%}">
+{% endblock css_files %}
+
+{% block content %}
+
+
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+</nav>
+
+<div class="container">
+    {% if class_names %}
+        {% for class in class_names %}
+            <div class="class-box">
+                {% comment %} <a href="{% url 'add-student' class.slug %}">
+                    {{ class.name }}
+                    <span class="student-count">Students: {{ class.student_set.count }}</span>
+                </a> {% endcomment %}
+
+                <a href="{% url "students-exams-type" class.slug %}">
+                    {{class.name}}
+                    <span class="student-count">Students: {{ class.student_set.count }}</span>
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No classes available.</p>
+    {% endif %}
+</div>
+{% endblock content %}

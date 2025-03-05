@@ -1,0 +1,94 @@
+{% extends "grades/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/view-report.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+
+
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+    <a href="{% url 'students' %}" class="nav-link">Classes</a>
+    <a href="{% url 'students-exams-type' student.class_name.slug %}" class="nav-link">Exams Type</a>
+    <a href="{% url 'add-student' student.class_name.slug %}" class="nav-link">Reports</a>
+</nav>
+
+<div class="report-container">
+    <h2>Student Report</h2>
+
+    <!-- Semester & Academic Year Selection Form -->
+    <form method="get" action="{% url 'view-report' slug=student.class_name.slug id=student.id %}" class="filter-form">
+      
+      <!-- Semester Dropdown -->
+      <label for="semester">Select Semester:</label>
+      <select name="semester" id="semester" onchange="this.form.submit()">
+          <option value="1" {% if selected_semester == 1 %}selected{% endif %}>Semester 1</option>
+          <option value="2" {% if selected_semester == 2 %}selected{% endif %}>Semester 2</option>
+          <option value="3" {% if selected_semester == 3 %}selected{% endif %}>Semester 3</option>
+      </select>
+
+      <!-- Academic Year Dropdown -->
+      <label for="academic_year">Select Academic Year:</label>
+      <select name="academic_year" id="academic_year" onchange="this.form.submit()">
+        <option value="">Select Academic Year</option>
+        {% for year in available_years %}
+            <option value="{{ year }}" {% if selected_academic_year == year %}selected{% endif %}>{{ year }}</option>
+        {% endfor %}
+    </select>
+
+    </form>
+
+    <!-- Student Information -->
+    <div>
+        <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
+        <p><strong>Class:</strong> {{ student.class_name }}</p>
+        <p><strong>Semester:</strong> {{ selected_semester }}</p>
+        <p><strong>Academic Year:</strong> {{ selected_academic_year }}</p>
+    </div>
+
+    <!-- Grades Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>30% Score</th>
+                <th>70% Score</th>
+                <th>Total (100%)</th>
+                <th>Subject Position</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.subject_name }}</td>
+                    <td>{{ exam.class_to_30|default:"0.00" }}</td>
+                    <td>{{ exam.exames_to_70|default:"0.00" }}</td>
+                    <td>{{ exam.total_score|default:"0.00" }}</td>
+                    <td>{{ subject_positions|get_item:exam.subject_name|default:"None" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Total Combined Score -->
+    <div class="total-score">
+        <p><strong>Total Combined Score:</strong> {{ total_combined_score|default:"0.00" }}</p>
+    </div>
+
+    <!-- Position in Class -->
+    <div class="position">
+        <p><strong>Position in Class:</strong> {{ position|default:"None" }}</p>
+    </div>
+</div>
+
+<!-- Print Button -->
+<button onclick="printReport()" class="print-btn">Print to PDF</button>
+
+{% block js_files %}
+<script src="{% static "grades/js/view_report.js" %}"></script>
+{% endblock js_files %}
+
+{% endblock content %}

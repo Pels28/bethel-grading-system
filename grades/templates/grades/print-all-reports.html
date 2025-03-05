@@ -1,0 +1,80 @@
+{% extends "grades/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/print-all-reports.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+    <a href="{% url 'students' %}" class="nav-link">📚 Students</a>
+</nav>
+
+<!-- Semester & Academic Year Selection Form -->
+<form method="GET" action="">
+    <label for="semester">Semester:</label>
+    <select name="semester" id="semester" onchange="this.form.submit()">
+        <option value="1" {% if selected_semester == 1 %}selected{% endif %}>Semester 1</option>
+        <option value="2" {% if selected_semester == 2 %}selected{% endif %}>Semester 2</option>
+    </select>
+
+    <label for="academic_year">Academic Year:</label>
+    <select name="academic_year" id="academic_year" onchange="this.form.submit()">
+        <option value="23/22">23/22</option>
+        <option value="24/23">24/23</option>
+        <option value="24/25" selected>24/25</option>
+    </select>
+</form>
+
+{% if all_reports %}
+<div class="print-reports-container">
+    {% for report in all_reports %}
+    <div class="report-page">
+        <h2>Student Report</h2>
+        <p><strong>Name:</strong> {{ report.student.first_name }} {{ report.student.last_name }}</p>
+        <p><strong>Class:</strong> {{ class_info.name }}</p>
+        <p><strong>Semester:</strong> {{ selected_semester }}</p>
+        <p><strong>Academic Year:</strong> {{ selected_academic_year }}</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>30% Score</th>
+                    <th>70% Score</th>
+                    <th>Total (100%)</th>
+                    <th>Subject Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in report.exams %}
+                <tr>
+                    <td>{{ exam.subject_name }}</td>
+                    <td>{{ exam.class_score }}</td>
+                    <td>{{ exam.exams_score }}</td>
+                    <td>{{ exam.total_score }}</td>
+                    <td>{{ report.subject_positions|get_item:exam.subject_name|default:"None" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p><strong>Total Combined Score:</strong> {{ report.total_combined_score }}</p>
+        <p><strong>Position in Class:</strong> {{ report.position|default:"None" }}</p>
+    </div>
+    <div style="page-break-after: always;"></div>  <!-- Ensures each report prints on a new page -->
+    {% endfor %}
+</div>
+
+<!-- Print Button -->
+<button onclick="window.print()" class="print-btn">🖨️ Print All Reports</button>
+
+{% else %}
+<div class="no-results">
+    <p>No Results Display</p>
+</div>
+{% endif %}
+
+{% endblock content %}

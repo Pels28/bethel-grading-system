@@ -1,0 +1,33 @@
+{% extends "grades/base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/students.css"%}">
+{% endblock css_files %}
+
+{% block content %}
+
+
+
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+</nav>
+
+<div class="container">
+{% if classes %}
+
+{% for class in classes %}
+
+<div class="class-box">
+                <a href="{% url 'results-exam-type' class.slug %}">
+                    {{ class.name }}
+                    <span class="student-count">Students:{{ class.student_set.count }}</span>
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No classes available.</p>
+    {% endif %}
+</div>
+
+{% endblock content %}

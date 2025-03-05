@@ -1,0 +1,124 @@
+{% extends "grades/base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "grades/css/add-students.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+
+<!-- Navigation Links -->
+<nav class="nav-links">
+    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+    <a href="{% url 'students' %}" class="nav-link">Classes</a>
+    <a href="{% url 'students-exams-type' class_info.slug %}" class="nav-link">Exams Type</a>
+</nav>
+
+<div class="container">
+    <!-- Header Section -->
+    <div class="header">
+        <h2>Students in {{ class_info.name }} ({{ students_in_class|length }})</h2>
+
+        <!-- Buttons for Export and Import -->
+        <div class="action-buttons">
+            <a href="{% url 'export-students-csv' class_info.slug %}" class="export-btn">Export Add Students CSV</a>
+            <button class="import-btn" onclick="openImportForm()">Import Add Students CSV</button>
+            <button class="add-student-btn" onclick="openForm()">Add Student</button>
+            <a class="print-all-btn export-btn" href="{% url 'print-all-reports' class_info.slug %}">
+                Print All Reports
+            </a>
+            <a href="{% url 'export-grades-csv' class_info.slug %}" class="export-btn">Export Grades CSV</a>
+            <button class="import-btn" onclick="openGradesImportForm()">Import Grades CSV</button>
+        </div>
+    </div>
+
+    <!-- Students Table or No Students Message -->
+    {% if students_in_class %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Report</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students_in_class %}
+                <tr>
+                    <td>
+                        <a href="{% url 'enter-indv-student-result' class_info.slug student.id %}">
+                            {{ student.first_name }} {{ student.last_name }}
+                        </a>
+                    </td>
+                    <td>{{ student.gender }}</td>
+                    <td>
+                        <a href="{% url 'view-report' class_info.slug student.id %}">
+                            View Report
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-students-message">
+        <p>No Students Added</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Student Form (Initially Hidden) -->
+<div class="form-popup" id="studentForm">
+    <form method="post" class="form-container">
+        {% csrf_token %}
+        <h2>Add Student</h2>
+        
+        <label>First Name:</label>
+        {{ form.first_name }}
+        
+        <label>Last Name:</label>
+        {{ form.last_name }}
+
+        <label>Gender:</label>
+        {{ form.gender }}
+
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" class="close-btn" onclick="closeForm()">Close</button>
+    </form>
+</div>
+
+<!-- Import Grades Form (Initially Hidden) -->
+<div class="form-popup" id="importGradesForm">
+    <form method="post" action="{% url 'import-grades-csv' class_info.slug %}" class="form-container" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Import Grades from CSV</h2>
+        
+        <label>Upload CSV File:</label>
+        <input type="file" name="grades_csv" accept=".csv" required>
+
+        <button type="submit" class="submit-btn">Import</button>
+        <button type="button" class="close-btn" onclick="closeGradesImportForm()">Close</button>
+    </form>
+</div>
+
+<!-- Import CSV Form (Initially Hidden) -->
+<div class="form-popup" id="importForm">
+    <form method="post" action="{% url 'import-students-csv' class_info.slug %}" class="form-container" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Import Students from CSV</h2>
+        
+        <label>Upload CSV File:</label>
+        <input type="file" name="csv_file" accept=".csv" required>
+
+        <button type="submit" class="submit-btn">Import</button>
+        <button type="button" class="close-btn" onclick="closeImportForm()">Close</button>
+    </form>
+</div>
+
+{% block js_files %}
+<script src="{% static "grades/js/add-students.js" %}"></script>
+{% endblock js_files %}
+
+{% endblock content %}
