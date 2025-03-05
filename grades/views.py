@@ -53,7 +53,7 @@ def class_results(request, slug):
 
 def add_student(request, slug):
     class_info = get_object_or_404(ClassName, slug=slug)
-    students_in_class = class_info.student_set.all()
+    students_in_class = class_info.student_set.all().order_by('first_name', 'last_name')
 
     if request.method == "POST":
         form = StudentForm(request.POST)
@@ -196,7 +196,7 @@ def view_report(request, slug, id):
     
     # Get the selected semester and academic year from request
     selected_semester = int(request.GET.get('semester', 1))  # Default to semester 1
-    selected_academic_year = request.GET.get('academic_year', "24/25")
+    selected_academic_year = request.GET.get('academic_year', "25/26")
 
     # Get all subjects
     all_subjects = Subject.objects.all()
@@ -514,7 +514,7 @@ def enter_indv_student_result(request, slug, id):
 
 def print_all_reports(request, slug):
     class_info = get_object_or_404(ClassName, slug=slug)
-    students = Student.objects.filter(class_name=class_info)
+    students = Student.objects.filter(class_name=class_info).order_by('first_name', 'last_name')
 
     # Get available academic years dynamically
     available_years = Exams.objects.values_list('academic_year', flat=True).distinct().order_by('-academic_year')
@@ -790,7 +790,7 @@ def exams_type(request, slug):
 
 def students_mid_terms(request, slug):
     class_info = get_object_or_404(ClassName, slug=slug)
-    students_in_class = class_info.student_set.all()
+    students_in_class = class_info.student_set.all().order_by('first_name', 'last_name')
 
     if request.method == "POST":
         form = StudentForm(request.POST)
@@ -984,7 +984,7 @@ def mid_term_view_report(request, slug, id):
     available_years = MidTermExams.objects.values_list('academic_year', flat=True).distinct().order_by('-academic_year')
 
     selected_semester = int(request.GET.get('semester', 1))
-    selected_academic_year = request.GET.get('academic_year', "24/25")
+    selected_academic_year = request.GET.get('academic_year', "25/26")
 
     all_subjects = Subject.objects.all()
 
@@ -1076,14 +1076,14 @@ def mid_term_view_report(request, slug, id):
 
 def mid_term_print_all_reports(request, slug):
     class_info = get_object_or_404(ClassName, slug=slug)
-    students = Student.objects.filter(class_name=class_info)
+    students = Student.objects.filter(class_name=class_info).order_by('first_name', 'last_name')
 
     # Get available academic years dynamically
     available_years = MidTermExams.objects.values_list('academic_year', flat=True).distinct().order_by('-academic_year')
 
     # Get selected semester and academic year from request
     selected_semester = int(request.GET.get('semester', 1))  # Default to 1
-    selected_academic_year = request.GET.get('academic_year', available_years.first() if available_years else "2024")  # Default to latest or 2024
+    selected_academic_year = request.GET.get('academic_year', available_years.first() if available_years else "25/26")  # Default to latest or 2024
 
     all_subjects = Subject.objects.all()
     all_reports = []
@@ -1096,12 +1096,12 @@ def mid_term_print_all_reports(request, slug):
         final_score = 0
 
         for subject in all_subjects:
-            exam = MidTermExams.objects.get(
+            exam = MidTermExams.objects.filter(
                 student=student,
                 subject=subject,
                 semester=selected_semester,
                 academic_year=selected_academic_year
-            )
+            ).first()  # Use filter().first() instead of get()
 
             if exam:
                 total_subject_score = exam.scores  # 30% + 70%
