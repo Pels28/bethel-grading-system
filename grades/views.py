@@ -626,7 +626,7 @@ def print_all_reports(request, slug):
     
 def export_grades_csv(request, slug):
     # Get students in the class
-    students = Student.objects.filter(class_name__slug=slug)
+    students = Student.objects.filter(class_name__slug=slug).order_by('first_name', 'last_name')
     subjects = Subject.objects.all()
     
     # Define CSV headers
@@ -820,7 +820,7 @@ def students_mid_terms(request, slug):
     
 def export_grades_csv_mid_term(request, slug):
     # Get students in the class
-    students = Student.objects.filter(class_name__slug=slug)
+    students = Student.objects.filter(class_name__slug=slug).order_by('first_name', 'last_name')
     subjects = Subject.objects.all()
 
     # Define CSV headers
