@@ -3,11 +3,11 @@
 {% load custom_filters %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static "grades/css/view-report.css" %}">
+<link rel="stylesheet" href="{% static 'grades/css/print-all-reports.css' %}">
+
 {% endblock css_files %}
 
 {% block content %}
-
 
 <nav class="nav-links">
     <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
@@ -16,44 +16,54 @@
     <a href="{% url 'add-student' student.class_name.slug %}" class="nav-link">Reports</a>
 </nav>
 
-<div class="report-container">
-    <h2>Student Report</h2>
-
-    <!-- Semester & Academic Year Selection Form -->
-    <form method="get" action="{% url 'view-report' slug=student.class_name.slug id=student.id %}" class="filter-form">
-      
-      <!-- Semester Dropdown -->
-      <label for="semester">Select Semester:</label>
-      <select name="semester" id="semester" onchange="this.form.submit()">
-          <option value="1" {% if selected_semester == 1 %}selected{% endif %}>Semester 1</option>
-          <option value="2" {% if selected_semester == 2 %}selected{% endif %}>Semester 2</option>
-          <option value="3" {% if selected_semester == 3 %}selected{% endif %}>Semester 3</option>
-      </select>
-
-      <!-- Academic Year Dropdown -->
-      <label for="academic_year">Select Academic Year:</label>
-      <select name="academic_year" id="academic_year" onchange="this.form.submit()">
-        <option value="">Select Academic Year</option>
-        {% for year in available_years %}
-            <option value="{{ year }}" {% if selected_academic_year == year %}selected{% endif %}>{{ year }}</option>
-        {% endfor %}
+<!-- Filter Form -->
+<form method="get" action="{% url 'view-report' slug=student.class_name.slug id=student.id %}" class="filter-form">
+    <label for="semester">Select Semester:</label>
+    <select name="semester" id="semester" onchange="this.form.submit()">
+        <option value="1" {% if selected_semester == 1 %}selected{% endif %}>Semester 1</option>
+        <option value="2" {% if selected_semester == 2 %}selected{% endif %}>Semester 2</option>
+        <option value="3" {% if selected_semester == 3 %}selected{% endif %}>Semester 3</option>
     </select>
 
-    </form>
+    <label for="academic_year">Select Academic Year:</label>
+    <select name="academic_year" id="academic_year" onchange="this.form.submit()">
+        <option value="">Select Academic Year</option>
+        {% if available_years %}
+        {% for year in available_years %}
+        <option value="{{ year }}" {% if selected_academic_year == year %}selected{% endif %}>{{ year }}</option>
+    {% endfor %}
+        {% else %}
+        <option value="{{ selected_academic_year }}" selected>{{ selected_academic_year }}</option>
+        {% endif %}
+    </select>
+</form>
 
-    <!-- Student Information -->
-    <div>
+<!-- Report Container (only this section will print) -->
+<div class="print-reports-container">
+    <div class="report-page">
+        <!-- School Header -->
+        <div class="school-header">
+            <img src="{% static 'grades/images/school_logo.jpg' %}" alt="School Logo" class="school-logo">
+            <div class="school-info">
+                <h1>Bethel Methodist International School</h1>
+                <p>P.O.Box kw 24, Kwadaso-Kumasi</p>
+                <p><strong>Academic Year:</strong> {{ selected_academic_year }} | <strong>Semester:</strong> {{ selected_semester }}</p>
+            </div>
+        </div>
+
+        <h2>{{exams_type}} Student Report</h2>
+
+    
         <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
         <p><strong>Class:</strong> {{ student.class_name }}</p>
-        <p><strong>Semester:</strong> {{ selected_semester }}</p>
-        <p><strong>Academic Year:</strong> {{ selected_academic_year }}</p>
-    </div>
+        <p><strong>Position in Class:</strong> {{ position|default:"None" }} out of {{ total_students }}</p>
+    
 
-    <!-- Grades Table -->
     <table>
         <thead>
             <tr>
                 <th>Subject</th>
+                <th>Teacher</th>
                 <th>30% Score</th>
                 <th>70% Score</th>
                 <th>Total (100%)</th>
@@ -64,6 +74,7 @@
             {% for exam in exams %}
                 <tr>
                     <td>{{ exam.subject_name }}</td>
+                    <td>{{ exam.teacher_name|default:"N/A" }}</td>
                     <td>{{ exam.class_to_30|default:"0.00" }}</td>
                     <td>{{ exam.exames_to_70|default:"0.00" }}</td>
                     <td>{{ exam.total_score|default:"0.00" }}</td>
@@ -73,22 +84,21 @@
         </tbody>
     </table>
 
-    <!-- Total Combined Score -->
-    <div class="total-score">
-        <p><strong>Total Combined Score:</strong> {{ total_combined_score|default:"0.00" }}</p>
-    </div>
+    <p><strong>Total Combined Score:</strong> {{ total_combined_score|default:"0.00" }}</p>
 
-    <!-- Position in Class -->
-    <div class="position">
-        <p><strong>Position in Class:</strong> {{ position|default:"None" }}</p>
+    <div class="signature-section">
+        <div class="signature">
+            <p>__________________________</p>
+            <p><strong>Class Teacher</strong></p>
+        </div>
+        <div class="signature">
+            <p>__________________________</p>
+            <p><strong>Headmaster</strong></p>
+        </div>
     </div>
 </div>
 
-<!-- Print Button -->
-<button onclick="printReport()" class="print-btn">Print to PDF</button>
-
-{% block js_files %}
-<script src="{% static "grades/js/view_report.js" %}"></script>
-{% endblock js_files %}
+<button onclick="window.print()" class="print-btn">Print to PDF</button>
+</div>
 
 {% endblock content %}

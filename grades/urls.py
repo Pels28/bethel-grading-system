@@ -28,5 +28,8 @@ urlpatterns = [
          path("students/<slug:slug>/mid-term/add-result/<int:id>", views.mid_term_indv_result, name="mid-term-indv-result"),
          path("students/<slug:slug>/mid-term/view-report/<int:id>", views.mid_term_view_report, name="mid-term-view-report"),
          path("results/<slug:slug>/exam-type/", views.results_exam_type, name="results-exam-type"),
-         path("results/<slug:slug>/view-mid-term-results", views.view_mid_term_results, name="view-mid-term-results")
+         path("results/<slug:slug>/view-mid-term-results", views.view_mid_term_results, name="view-mid-term-results"),
+            path('add-class/', views.add_class, name='add-class'),
+              path("delete-subject/<int:subject_id>/", views.delete_subject, name="delete_subject"),
+          
 ]

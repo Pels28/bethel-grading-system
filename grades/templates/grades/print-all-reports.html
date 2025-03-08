@@ -7,10 +7,12 @@
 {% endblock css_files %}
 
 {% block content %}
-<nav class="nav-links">
-    <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
-    <a href="{% url 'students' %}" class="nav-link">📚 Students</a>
-</nav>
+<div class="print-wrapper">
+    <nav class="nav-links">
+        <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
+        <a href="{% url 'students' %}" class="nav-link">📚 Students</a>
+        <a href="{% url 'students-mid-term' class_info.slug %}" class="nav-link">Reports</a>
+    </nav>
 
 <!-- Semester & Academic Year Selection Form -->
 <form method="GET" action="">
@@ -22,9 +24,14 @@
 
     <label for="academic_year">Academic Year:</label>
     <select name="academic_year" id="academic_year" onchange="this.form.submit()">
-        <option value="23/22">23/22</option>
-        <option value="24/23">24/23</option>
-        <option value="24/25" selected>24/25</option>
+        <option value="">Select Academic Year</option>
+        {% if available_years  %}
+        {% for year in available_years %}
+        <option value="{{ year }}" {% if selected_academic_year == year %}selected{% endif %}>{{ year }}</option>
+    {% endfor %}
+        {% else %}
+        <option value="{{ selected_academic_year }}" selected>{{ selected_academic_year }}</option>
+        {% endif %}
     </select>
 </form>
 
@@ -32,17 +39,28 @@
 <div class="print-reports-container">
     {% for report in all_reports %}
     <div class="report-page">
-        <h2>Student Report</h2>
+        <!-- School Letterhead -->
+        <div class="school-header">
+            <img src="{% static 'grades/images/school_logo.jpg' %}" alt="School Logo" class="school-logo">
+            <div class="school-info">
+                <h1>Bethel Methodist International School</h1>
+                <p>P.O.Box kw 34</p>
+                <p><strong>Academic Year:</strong> {{ selected_academic_year }} | <strong>Semester:</strong> {{ selected_semester }}</p>
+            </div>
+        </div>
+
+        <h2>{{exams_type}}  Student Report</h2>
         <p><strong>Name:</strong> {{ report.student.first_name }} {{ report.student.last_name }}</p>
         <p><strong>Class:</strong> {{ class_info.name }}</p>
-        <p><strong>Semester:</strong> {{ selected_semester }}</p>
-        <p><strong>Academic Year:</strong> {{ selected_academic_year }}</p>
+        <p><strong>Position:</strong> {{ report.position|default:"None" }} of {{ total_students }}</p>
 
         <table>
             <thead>
                 <tr>
                     <th>Subject</th>
+                    <th>Teacher</th>
                     <th>30% Score</th>
+                    
                     <th>70% Score</th>
                     <th>Total (100%)</th>
                     <th>Subject Position</th>
@@ -52,6 +70,7 @@
                 {% for exam in report.exams %}
                 <tr>
                     <td>{{ exam.subject_name }}</td>
+                    <td>{{ exam.teacher_name }}</td>
                     <td>{{ exam.class_score }}</td>
                     <td>{{ exam.exams_score }}</td>
                     <td>{{ exam.total_score }}</td>
@@ -62,7 +81,19 @@
         </table>
 
         <p><strong>Total Combined Score:</strong> {{ report.total_combined_score }}</p>
-        <p><strong>Position in Class:</strong> {{ report.position|default:"None" }}</p>
+
+           <!-- Signature Section -->
+           <div class="signature-section">
+            <div class="signature">
+                <p>__________________________</p>
+                <p><strong>Class Teacher</strong></p>
+            </div>
+            <div class="signature">
+                <p>__________________________</p>
+                <p><strong>Headmaster</strong></p>
+            </div>
+        </div>
+
     </div>
     <div style="page-break-after: always;"></div>  <!-- Ensures each report prints on a new page -->
     {% endfor %}
@@ -74,6 +105,7 @@
 {% else %}
 <div class="no-results">
     <p>No Results Display</p>
+</div>
 </div>
 {% endif %}
 

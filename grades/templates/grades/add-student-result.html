@@ -31,7 +31,7 @@
         <label>Semester:</label>
         <select name="semester" id="semester" required>
             <option value="">Select Semester</option>
-            <option value="1">1st Semester</option>
+            <option value="1" selected>1st Semester</option>
             <option value="2">2nd Semester</option>
         </select>
 
@@ -73,6 +73,9 @@
                     <td>
                         <input type="number" class="total-score" readonly>
                     </td>
+                    <td>
+                        <button type="button" class="delete-btn">Delete</button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -92,6 +95,7 @@
             <input type="text" id="subjectName" name="subjectName" required>
             <label for="teacherName">Teacher Name:</label>
             <input type="text" id="teacherName" name="teacherName" required>
+            <input type="text" id="className" hidden name="className" value="{{ class_name.id }}" required>
             <button type="submit" class="btn btn-primary">Add Subject</button>
         </form>
     </div>

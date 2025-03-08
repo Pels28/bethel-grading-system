@@ -7,22 +7,44 @@
 
 {% block content %}
 
-
 <nav class="nav-links">
     <a href="{% url 'index' %}" class="nav-link">🏠 Home</a>
 </nav>
+
+<div class="page-header">
+    <h1 class="page-title">Class List</h1>
+    <button class="add-class-btn" onclick="openAddClassForm()">➕ Add Class</button>
+</div>
+
+<!-- Add Class Form (Popup Modal) -->
+<div class="form-popup" id="addClassForm">
+    <form method="post" action="{% url 'add-class' %}" class="form-container">
+        {% csrf_token %}
+        <h2>Add New Class</h2>
+
+        <div class="form-group">
+            <label for="class_name">Class Name:</label>
+            <input type="text" name="class_name" id="class_name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="teacher_name">Class Teacher:</label>
+            <input type="text" name="teacher_name" id="teacher_name" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="submit-btn">Add Class</button>
+            <button type="button" class="close-btn" onclick="closeAddClassForm()">Close</button>
+        </div>
+    </form>
+</div>
 
 <div class="container">
     {% if class_names %}
         {% for class in class_names %}
             <div class="class-box">
-                {% comment %} <a href="{% url 'add-student' class.slug %}">
-                    {{ class.name }}
-                    <span class="student-count">Students: {{ class.student_set.count }}</span>
-                </a> {% endcomment %}
-
                 <a href="{% url "students-exams-type" class.slug %}">
-                    {{class.name}}
+                    {{ class.name }}
                     <span class="student-count">Students: {{ class.student_set.count }}</span>
                 </a>
             </div>
@@ -31,4 +53,10 @@
         <p>No classes available.</p>
     {% endif %}
 </div>
+
+
 {% endblock content %}
+
+{% block js_files %}
+<script src=" {% static "grades/js/students.js" %} "></script>
+{% endblock js_files %}

@@ -57,6 +57,13 @@
                             View Report
                         </a>
                     </td>
+                    <td>
+                        <form method="post" action="{% url 'students-mid-term' class_info.slug %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ student.id }}">
+                            <button type="submit" name="delete_student" class="delete-btn">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

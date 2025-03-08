@@ -15,6 +15,17 @@
 </nav>
 
 <div class="container">
+    <!-- Display success/error messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <!-- Header Section -->
     <div class="header">
         <h2>Students in {{ class_info.name }} ({{ students_in_class|length }})</h2>
@@ -41,6 +52,7 @@
                     <th>Name</th>
                     <th>Gender</th>
                     <th>Report</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,6 +68,13 @@
                         <a href="{% url 'view-report' class_info.slug student.id %}">
                             View Report
                         </a>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'add-student' class_info.slug %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ student.id }}">
+                            <button type="submit" name="delete_student" class="delete-btn">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}

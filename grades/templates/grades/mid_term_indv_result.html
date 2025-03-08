@@ -57,6 +57,9 @@
                     <td>
                         <input type="number" name="score_{{ subject.id }}" class="score" min="0" max="100">
                     </td>
+                    <td>
+                        <button type="button" class="delete-btn">Delete</button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -76,6 +79,7 @@
             <input type="text" id="subjectName" name="subjectName" required>
             <label for="teacherName">Teacher Name:</label>
             <input type="text" id="teacherName" name="teacherName" required>
+            <input type="text" id="className" hidden name="className" value="{{ class_name.id }}" required>
             <button type="submit" class="btn btn-primary">Add Subject</button>
         </form>
     </div>

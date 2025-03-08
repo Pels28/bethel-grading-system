@@ -39,6 +39,7 @@ class ClassAdmin(admin.ModelAdmin):
     
 class StudentAdmin(admin.ModelAdmin):
     list_display = ("first_name", "last_name", "class_name", "gender")
+    list_filter = ("first_name", "last_name", "class_name",)
     
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ("subject_name", "teacher_name")

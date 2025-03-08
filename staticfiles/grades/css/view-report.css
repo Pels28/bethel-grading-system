@@ -1,6 +1,6 @@
 /* Centering the report container */
 .report-container {
-    max-width: 700px;
+    max-width: 750px;
     margin: 30px auto;
     background: #ffffff;
     padding: 20px;
@@ -14,13 +14,48 @@ h2 {
     color: #333;
 }
 
-/* Semester Dropdown */
-.semester-form {
+/* Letterhead */
+.letterhead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.school-logo {
+    width: 80px;
+    height: auto;
+}
+
+.school-info {
+    text-align: right;
+}
+
+.school-info h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.school-info p {
+    margin: 2px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.divider {
+    border: 1px solid #000;
+    margin: 15px 0;
+}
+
+/* Semester Dropdown Form */
+.filter-form {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.semester-form select {
+.filter-form select {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -28,14 +63,20 @@ h2 {
 }
 
 /* Student Info Section */
-.report-container div {
+.student-info p {
     text-align: center;
-    margin-bottom: 15px;
-}
-
-.report-container p {
+    margin: 5px 0;
     font-size: 16px;
     color: #555;
+}
+
+/* Position Info */
+.position-info {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #444;
 }
 
 /* Table Styling */
@@ -60,12 +101,40 @@ tbody tr:nth-child(even) {
     background: #f9f9f9;
 }
 
-/* Total Score & Position */
-.total-score, .position {
+/* Total Score Section */
+.total-score {
     margin-top: 15px;
     text-align: center;
     font-size: 18px;
     font-weight: bold;
+    color: #333;
+}
+
+/* Signature Section */
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
+}
+
+.signature-box {
+    text-align: center;
+    width: 45%;
+}
+
+.signature-box p {
+    margin: 25px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+
+.signature-line {
+    margin-top: 35px;
+    border-top: 1px solid #000;
+    width: 100%;
 }
 
 /* Print Button */
@@ -87,17 +156,17 @@ tbody tr:nth-child(even) {
     background: #218838;
 }
 
-
+/* Navbar Styling */
 .nav-links {
     display: flex;
     justify-content: flex-start;
-    background-color: #007bff; /* Blue background */
+    background-color: #007bff;
     padding: 10px 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .nav-link {
-    color: #fff; /* White text */
+    color: #fff;
     text-decoration: none;
     font-size: 16px;
     font-weight: bold;
@@ -108,5 +177,40 @@ tbody tr:nth-child(even) {
 }
 
 .nav-link:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .report-container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .signature-section {
+        /* flex-direction: column; */
+        gap: 20px;
+    }
+
+    .signature-box {
+        width: 100%;
+    }
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .report-container, .report-container * {
+        visibility: visible;
+    }
+    .report-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    .nav-links, .filter-form, .print-btn {
+        display: none !important;
+    }
 }

@@ -170,3 +170,19 @@ button[type="submit"]:hover {
     margin-bottom: 20px;
     border: 1px solid #c3e6cb;
 }
+
+/* Delete button styling */
+.delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}

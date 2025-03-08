@@ -183,6 +183,35 @@ tr:hover {
     }
 }
 
+
+.school-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.school-logo {
+    height: 80px;
+    margin-right: 15px;
+}
+
+.school-info h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #333;
+}
+
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.signature {
+    text-align: center;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-links {
@@ -239,5 +268,26 @@ tr:hover {
 
     th, td {
         padding: 6px;
+    }
+}
+
+@media print {
+    body * {
+        visibility: hidden; /* Hide everything by default */
+    }
+
+    .print-reports-container, .print-reports-container * {
+        visibility: visible; /* Show only the reports container */
+    }
+
+    .print-reports-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .nav-links, .print-btn {
+        display: none; /* Explicitly hide navigation and buttons */
     }
 }
