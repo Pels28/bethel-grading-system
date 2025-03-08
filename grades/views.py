@@ -1028,13 +1028,14 @@ def mid_term_indv_result(request, slug, id):
     student = get_object_or_404(Student, pk=id)
     subjects= None
     class_name = get_object_or_404(ClassName, slug=slug)
-    if slug in ['jhs-1', 'jhs-2', 'jhs-3']:
-        # If the class is one of the JHS classes, get all subjects for any JHS class
-        subjects = Subject.objects.filter(class_name__name__icontains='JHS')
 
+    if 'jhs' in slug:
+        # Fetch all subjects from JHS classes (jhs-1, jhs-2, jhs-3) without duplicates
+            subjects = Subject.objects.filter(class_name__name__icontains='JHS')
     else:
-        # For other classes, filter subjects by the exact class slug
-        subjects = Subject.objects.filter(class_name=class_name)
+        # Fetch subjects specific to the class
+            subjects = Subject.objects.filter(class_name__slug=slug)        
+        
 
     if request.method == "POST":
         semester = request.POST.get("semester")
