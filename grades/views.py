@@ -160,7 +160,7 @@ def view_results(request, slug):
     available_years = Exams.objects.values_list('academic_year', flat=True).distinct().order_by('-academic_year')
 
     # Get selected academic year and semester from request
-    selected_academic_year = request.GET.get('academic_year', available_years.first() if available_years else "2024")  # Default to latest or 2024
+    selected_academic_year = request.GET.get('academic_year', available_years.first() if available_years else "25/26")  # Default to latest or 2024
     selected_semester = int(request.GET.get('semester', 1))  # Default to Semester 1
     
     print(selected_academic_year)
@@ -1333,7 +1333,7 @@ def view_mid_term_results(request, slug):
     available_years = MidTermExams.objects.values_list('academic_year', flat=True).distinct().order_by('-academic_year')
 
     # Get selected academic year and semester from request
-    selected_academic_year = request.GET.get('academic_year', available_years.first() if available_years else "2024")  # Default to latest or 2024
+    selected_academic_year = request.GET.get('academic_year', available_years.first() if available_years else "25/26")  # Default to latest or 2024
     selected_semester = int(request.GET.get('semester', 1))  # Default to Semester 1
     
     print(selected_academic_year)

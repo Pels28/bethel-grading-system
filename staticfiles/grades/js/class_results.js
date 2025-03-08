@@ -21,5 +21,14 @@ function redirectToReport(classSlug, studentId) {
     let academicYear = document.getElementById("academic_year").value;
     
     // Redirect with semester and academic year as query params
-    window.location.href = `/students/${classSlug}/view-report/${studentId}/?semester=${semester}&academic_year=${academicYear}`;
+    window.location.href = `/students/${classSlug}/mid-term/view-report/${studentId}/?semester=${semester}&academic_year=${academicYear}`;
+}
+
+
+function redirectToTerminalReport(classSlug, studentId) {
+    let semester = document.getElementById("semester").value;
+    let academicYear = document.getElementById("academic_year").value;
+    
+    // Redirect with semester and academic year as query params
+    window.location.href = `/students/${classSlug}/view-report/terminal-exams/${studentId}/?semester=${semester}&academic_year=${academicYear}`;
 }

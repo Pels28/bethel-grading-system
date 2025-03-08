@@ -19,11 +19,14 @@
 <form method="get" action="{% url 'view-results' slug=class_name.slug %}" class="semester-form">
     <label for="academic_year">Select Academic Year:</label>
     <select name="academic_year" id="academic_year" onchange="this.form.submit()">
-    
-        <option value="22/23">22/23</option>
-        <option value="23/24">23/24</option>
-        <option value="24/25"selected>24/25</option>
-
+        <option value="">Select Academic Year</option>
+        {% if available_years %}
+        {% for year in available_years %}
+        <option value="{{ year }}" {% if selected_academic_year == year %}selected{% endif %}>{{ year }}</option>
+    {% endfor %}
+        {% else %}
+        <option value="{{ selected_academic_year }}" selected>{{ selected_academic_year }}</option>
+        {% endif %}
     </select>
 
     <label for="semester">Select Semester:</label>
