@@ -49,9 +49,16 @@ def add_class(request):
         teacher_name = request.POST.get('teacher_name')
 
         if class_name and teacher_name:
-            # Create the class
-            ClassName.objects.create(name=class_name, teacher=teacher_name)
-            messages.success(request, f'Class "{class_name}" added successfully!')
+            # Use get_or_create to avoid duplicates
+            class_obj, created = ClassName.objects.get_or_create(
+                name=class_name,
+                defaults={'teacher': teacher_name}
+            )
+
+            if created:
+                messages.success(request, f'Class "{class_name}" added successfully!')
+            else:
+                messages.info(request, f'Class "{class_name}" already exists.')
         else:
             messages.error(request, "Please fill in all fields.")
 
@@ -834,7 +841,7 @@ def add_subject(request):
             # Check if subject already exists in any JHS class with the same teacher
             existing_subject = Subject.objects.filter(
                 subject_name=subject_name,
-                teacher_name=teacher_name,
+                # teacher_name=teacher_name,
                 class_name__in=jhs_classes
             ).exists()
 
