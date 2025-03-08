@@ -33,70 +33,7 @@ class Student(models.Model):
         return f"{self.first_name} {self.last_name}"
     
     
-# class Subject(models.Model):
-#     subject_name = models.CharField(max_length=50)
-    
-#     def __str__(self):
-#         return self.subject_name
-    
-# class Monthly_Exams(models.Model):
-#     exams_1 = models.IntegerField()
-#     exams_2 = models.IntegerField(null= True)
-#     exams_3 = models.IntegerField(null=True)
-#     tot_out_of_30 = models.IntegerField(null= True, editable=False)
-#     subject_name = models.ForeignKey(Subject, on_delete= models.CASCADE, null= True)
-#     class_name = models.ForeignKey(ClassName, on_delete=models.CASCADE,)
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    
-#     def save(self, *args, **kwargs):
-#         self.tot_out_of_30 = ((self.exams_1 + self.exams_2 + self.exams_3) * 30 ) /100
-#         super().save(*args, **kwargs)
-    
-#     class Meta:
-#         verbose_name_plural = "Monthly Exams"
-    
-# class Final_Exams(models.Model):
-#     exams_score = models.IntegerField()
-#     tot_out_of_70 = models.IntegerField(null= True)
-#     subject_name = models.ManyToManyField(Subject, related_name='subject_name')
-#     class_name = models.ForeignKey(ClassName, on_delete=models.CASCADE, related_name='class')
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student')
-    
-# class Result(models.Model):
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-#     monthly_exams = models.ForeignKey(Monthly_Exams, on_delete=models.CASCADE)
-#     final_exams = models.ForeignKey(Final_Exams, on_delete=models.CASCADE)
-#     total_exams_score = models.DecimalField()
-#     position= models.IntegerField()
 
-# class Student(models.Model):
-#     first_name = models.CharField(max_length=50)
-#     last_name = models.CharField(max_length=50)
-#     class_name = models.ForeignKey(ClassName, on_delete=models.CASCADE)
-    
-#     def __str__(self):
-#         return f"{self.first_name} {self.last_name}"
-
-
-class JHS3(models.Model):
-    GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-    ]
-    
-    class_name = models.CharField(max_length=10, null=True, editable=False)
-    student_name = models.CharField(max_length=50)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    
-    def __str__(self):
-        return f"{self.student_name} {self.gender}"
-    
-    def save(self, *args, **kwargs):
-        self.class_name = "JHS3"
-        super().save(*args, **kwargs)
-    
-    class Meta:
-        verbose_name_plural = "JHS 3 Students"
         
 class Subject(models.Model):
     subject_name = models.CharField(max_length=20)
