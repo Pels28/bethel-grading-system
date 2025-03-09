@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 import csv
 import json
 from django.urls import reverse
+import chardet
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from django.contrib import messages
 
@@ -426,9 +428,18 @@ def import_students_csv(request, slug):
 
     if request.method == "POST":
         csv_file = request.FILES["csv_file"]
+        raw_data = csv_file.read()
 
-        # Read the CSV file
-        decoded_file = csv_file.read().decode("utf-8").splitlines()
+        # Detect encoding
+        encoding = chardet.detect(raw_data)['encoding']
+
+        try:
+            # Decode using detected encoding
+            decoded_file = raw_data.decode(encoding).splitlines()
+        except UnicodeDecodeError:
+            # Fallback to a different encoding if the detected one fails
+            decoded_file = raw_data.decode('iso-8859-1').splitlines()
+
         reader = csv.DictReader(decoded_file)
 
         # Import students from the CSV file
@@ -440,9 +451,20 @@ def import_students_csv(request, slug):
                 class_name=class_info,
             )
 
-        return HttpResponseRedirect(reverse("add-student", args=[slug]))
+        # Redirect to the referring page (the page the user was on before submitting the form)
+        referer = request.META.get('HTTP_REFERER')
+        if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
+            return HttpResponseRedirect(referer)
+        else:
+            # Fallback to a default page if the referer is not safe or not available
+            return HttpResponseRedirect(reverse("add-student", args=[slug]))
 
-    return HttpResponseRedirect(reverse("add-student", args=[slug]))
+    # If not a POST request, redirect to the referring page or fallback
+    referer = request.META.get('HTTP_REFERER')
+    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
+        return HttpResponseRedirect(referer)
+    else:
+        return HttpResponseRedirect(reverse("add-student", args=[slug]))
 
 
 
@@ -701,22 +723,39 @@ def export_grades_csv(request, slug):
     
     return response
 
+
 def import_grades_csv(request, slug):
     class_name = get_object_or_404(ClassName, slug=slug)
 
     if request.method == 'POST' and request.FILES.get('grades_csv'):
         csv_file = request.FILES['grades_csv']
-        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        raw_data = csv_file.read()
+
+        # Detect encoding
+        encoding = chardet.detect(raw_data)['encoding']
+
+        try:
+            # Decode using detected encoding
+            decoded_file = raw_data.decode(encoding).splitlines()
+        except UnicodeDecodeError:
+            # Fallback to a different encoding if the detected one fails
+            try:
+                decoded_file = raw_data.decode('iso-8859-1').splitlines()
+            except UnicodeDecodeError:
+                messages.error(request, "Failed to decode the CSV file. Please ensure it is encoded in UTF-8 or ISO-8859-1.")
+                return redirect('add-student', class_name.slug)
+
         reader = csv.reader(decoded_file)
 
         # Read headers
         headers = next(reader)
-    # Determine subjects based on the slug
+
+        # Determine subjects based on the slug
         if 'jhs' in slug:
-        # Fetch all subjects from JHS classes (jhs-1, jhs-2, jhs-3) without duplicates
+            # Fetch all subjects from JHS classes (jhs-1, jhs-2, jhs-3) without duplicates
             subjects = Subject.objects.filter(class_name__name__icontains='JHS')
         else:
-        # Fetch subjects specific to the class
+            # Fetch subjects specific to the class
             subjects = Subject.objects.filter(class_name__slug=slug)
 
         for row in reader:
@@ -954,19 +993,27 @@ def import_grades_csv_mid_term(request, slug):
 
     if request.method == 'POST' and request.FILES.get('grades_csv'):
         csv_file = request.FILES['grades_csv']
-        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        raw_data = csv_file.read()
+
+        # Detect encoding
+        encoding = chardet.detect(raw_data)['encoding']
+
+        try:
+            # Decode using detected encoding
+            decoded_file = raw_data.decode(encoding).splitlines()
+        except UnicodeDecodeError:
+            # Fallback to a different encoding if the detected one fails
+            decoded_file = raw_data.decode('iso-8859-1').splitlines()
+
         reader = csv.reader(decoded_file)
 
         # Read headers
         headers = next(reader)
 
         # Fetch all subjects in the system
-    # Determine subjects based on the slug
         if 'jhs' in slug:
-        # Fetch all subjects from JHS classes (jhs-1, jhs-2, jhs-3) without duplicates
             subjects = Subject.objects.filter(class_name__name__icontains='JHS')
         else:
-        # Fetch subjects specific to the class
             subjects = Subject.objects.filter(class_name__slug=slug)
 
         for row in reader:
@@ -989,9 +1036,8 @@ def import_grades_csv_mid_term(request, slug):
                 print(f"Student not found: {first_name} {last_name}")
                 continue
 
-            # Process scores for each subject
             for idx, subject in enumerate(subjects):
-                score_column_index = 5 + idx  # Start after basic columns
+                score_column_index = 5 + idx
                 if score_column_index >= len(row):
                     print(f"Missing score for {subject.subject_name}, skipping")
                     continue
@@ -999,7 +1045,6 @@ def import_grades_csv_mid_term(request, slug):
                 score = row[score_column_index]
 
                 if not score.strip():
-                    # If no score provided, skip this subject for this student
                     continue
 
                 try:
@@ -1008,7 +1053,6 @@ def import_grades_csv_mid_term(request, slug):
                     print(f"Invalid score '{score}' for {subject.subject_name}, skipping")
                     continue
 
-                # Save to MidTermExams
                 exam, created = MidTermExams.objects.update_or_create(
                     student=student,
                     class_name=class_name,
@@ -1019,8 +1063,6 @@ def import_grades_csv_mid_term(request, slug):
                         'scores': score
                     }
                 )
-                
-                print("Pels")
 
                 print(f"Saved {subject.subject_name} score for {student.first_name}: {score}")
 

@@ -1,6 +1,7 @@
 {% extends "grades/base.html" %}
 {% load static %}
 {% load custom_filters %}
+{% load filters %}  <!-- Load the custom filter -->
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static "grades/css/print-all-reports.css" %}">
@@ -52,7 +53,8 @@
         <h2>{{exams_type}}  Student Report</h2>
         <p><strong>Name:</strong> {{ report.student.first_name }} {{ report.student.last_name }}</p>
         <p><strong>Class:</strong> {{ class_info.name }}</p>
-        <p><strong>Position:</strong> {{ report.position|default:"None" }} of {{ total_students }}</p>
+        <p><strong>Position:</strong> {{ report.position|ordinal|default:"None" }}</p>
+        <p><strong>Enrollment : {{ total_students }}</strong></p>
 
         <table>
             <thead>

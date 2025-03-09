@@ -1,6 +1,7 @@
 {% extends "grades/base.html" %}
 {% load static %}
 {% load custom_filters %}
+{% load filters %}  <!-- Load the custom filter -->
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'grades/css/print-all-reports.css' %}">
@@ -55,25 +56,28 @@
         <!-- Student Info -->
         <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
         <p><strong>Class:</strong> {{ student.class_name }}</p>
-        <p><strong>Position in Class:</strong> {{ position|default:"None" }} out of {{ total_students }}</p>
+        <p><strong>Position in Class:</strong> {{ position|ordinal|default:"None" }}</p>
+        <p><strong>Enrollment:</strong> {{total_students}}
 
         <!-- Grades Table -->
         <table>
             <thead>
                 <tr>
                     <th>Subject</th>
-                    <th>Teacher</th>
+           
                     <th>Score (100%)</th>
                     <th>Subject Position</th>
+                    <th>Teacher</th>
                 </tr>
             </thead>
             <tbody>
                 {% for exam in exams %}
                 <tr>
                     <td>{{ exam.subject_name }}</td>
-                    <td>{{ subject_teachers|get_item:exam.subject_name|default:"-" }}</td>
+                  
                     <td>{{ exam.scores|default:"0.00" }}</td>
                     <td>{{ subject_positions|get_item:exam.subject_name|default:"None" }}</td>
+                    <td>{{ subject_teachers|get_item:exam.subject_name|default:"-" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
