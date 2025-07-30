@@ -82,23 +82,23 @@ WSGI_APPLICATION = 'bethel_grading_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE':  'django.db.backends.postgresql',
-        'NAME': getenv('DATABASE_NAME'),
-        'USER': getenv('DATABASE_USER'),
-        'PASSWORD': getenv('DATABASE_PASSWORD'),
-        'HOST': getenv('DATABASE_HOST'),
-        'PORT': getenv('DATABASE_PORT') 
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE':  'django.db.backends.postgresql',
+#         'NAME': getenv('DATABASE_NAME'),
+#         'USER': getenv('DATABASE_USER'),
+#         'PASSWORD': getenv('DATABASE_PASSWORD'),
+#         'HOST': getenv('DATABASE_HOST'),
+#         'PORT': getenv('DATABASE_PORT') 
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
